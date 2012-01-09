@@ -2,4 +2,3 @@
 *.so
 .libs/
 # ignore files which have no suffix
-!*.*
