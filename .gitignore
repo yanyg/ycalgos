@@ -1,4 +1,12 @@
 *.[oa]
 *.so
+*.swp
+
+# libtool gens files in .libs/
 .libs/
-# ignore files which have no suffix
+
+# compiled files.
+build/
+
+# core-dumpped
+core*
