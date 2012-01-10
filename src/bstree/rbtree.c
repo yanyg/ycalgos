@@ -1,33 +1,33 @@
 /*
-  rbtree.c Red Black Trees
-
-  Copyright (C) 2011 yanyg (cppgp@qq.com)
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * rbtree.c -- Red Black Trees
+ *
+ * Copyright (C) 2012-2013 yanyg (cppgp@qq.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 #include <yc/algos/rbtree.h>
 
-static inline bool __rb_insert(struct rb_node *node,
-	       struct rb_root *rb,
-	       int (*compare_link)(const struct rb_node *node1,
-				   const struct rb_node *node2,
-				   const void *arg),
-	       const void *arg,
-	       bool bunique
-	       )
+static inline bool
+__rb_insert(struct rb_node *node,
+	    struct rb_root *rb,
+	    int (*compare_link)(const struct rb_node *node1,
+				const struct rb_node *node2,
+				const void *arg),
+	    const void *arg,
+	    bool bunique)
 {
 	int icmp;
 	struct rb_node *parent = NULL;
@@ -137,7 +137,9 @@ void rb_insert_color(struct rb_node *node, struct rb_root *rb)
 	rb_set_black(*proot);
 }
 
-static inline void __rb_erase_color(struct rb_node *node, struct rb_node *parent, struct rb_root *rb)
+static inline void __rb_erase_color(struct rb_node *node,
+				    struct rb_node *parent,
+				    struct rb_root *rb)
 {
 	struct rb_node *other;
 	struct rb_node **proot = &rb->node;
@@ -164,7 +166,8 @@ static inline void __rb_erase_color(struct rb_node *node, struct rb_node *parent
 				node = parent;
 				parent = node->parent;
 			} else {
-				if (!other->right || rb_is_black(other->right)) {
+				if (!other->right ||
+				    rb_is_black(other->right)) {
 					rb_set_black(other->left);
 					rb_set_red(other);
 					__bstlink_rotate_right(other, proot);
@@ -236,7 +239,7 @@ void rb_erase(struct rb_node *node, struct rb_root *rb)
 		} else
 			rb->node = child;
 	} else {
-		struct rb_node *scor = node->right;	/* scor: successor */
+		struct rb_node *scor = node->right; /* scor: successor */
 		while (scor->left)
 			scor = scor->left;
 
@@ -272,7 +275,9 @@ void rb_erase(struct rb_node *node, struct rb_root *rb)
 		__rb_erase_color(child, parent, rb);
 }
 
-void rb_erase_range(struct rb_node *beg, struct rb_node *end, struct rb_root *rb)
+void rb_erase_range(struct rb_node *beg,
+		    struct rb_node *end,
+		    struct rb_root *rb)
 {
 	struct rb_node *del;
 
@@ -283,11 +288,12 @@ void rb_erase_range(struct rb_node *beg, struct rb_node *end, struct rb_root *rb
 	}
 }
 
-void rb_erase_equal(struct rb_root *rb,
-		    int (*compare)(const struct rb_node *node, const void *arg),
-		    void (*destroy)(struct rb_node *node, const void *arg),
-		    const void *arg_compare,
-		    const void *arg_destroy)
+void
+rb_erase_equal(struct rb_root *rb,
+	       int (*compare)(const struct rb_node *node, const void *arg),
+	       void (*destroy)(struct rb_node *node, const void *arg),
+	       const void *arg_compare,
+	       const void *arg_destroy)
 {
 	struct rb_node *beg, *end, *del;
 

@@ -1,27 +1,30 @@
 /*
-  rbtree.h Red Black Trees
-
-  Copyright (C) 2011 yanyg (cppgp@qq.com)
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * rbtree.h -- Red Black Trees
+ *
+ * Copyright (C) 2012-2013 yanyg (cppgp@qq.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * To use rbtrees you'll have to implement your own insert and search cores.
+ * This will avoid us to use callbacks and to drop drammatically performances.
+ * 
  */
 
 #ifndef __YC_ALGOS_RBTREE_H_
 #define __YC_ALGOS_RBTREE_H_
 
-/* bstree.h: base binary-tree */
 #include <yc/algos/bstree-link.h>
 
 __BEGIN_DECLS
@@ -76,10 +79,11 @@ static inline struct rb_node *rb_prev(const struct rb_node* node)
 	return __bstlink_prev(node, struct rb_node);
 }
 
-static inline struct rb_node *rb_find(const struct rb_root *rb,
-				      int (*compare)(const struct rb_node *node,
-						     const void *arg),
-				      const void *arg)
+static inline struct rb_node *
+rb_find(const struct rb_root *rb,
+	int (*compare)(const struct rb_node *node,
+		       const void *arg),
+		       const void *arg)
 {
 	return __bstlink_find(rb->node, compare, arg, struct rb_node);
 }
@@ -102,12 +106,13 @@ static inline struct rb_node *rb_upper_bound(struct rb_root *rb,
 	return __bstlink_upper_bound(rb->node, compare, arg, struct rb_node);
 }
 
-static inline void rb_lower_upper_bound(struct rb_root *rb,
-					int (*compare)(const struct rb_node *node,
-						       const void *arg),
-					const void *arg,
-					struct rb_node **plower,
-					struct rb_node **pupper)
+static inline void
+rb_lower_upper_bound(struct rb_root *rb,
+		     int (*compare)(const struct rb_node *node,
+		     const void *arg),
+		     const void *arg,
+		     struct rb_node **plower,
+		     struct rb_node **pupper)
 {
 	__bstlink_lower_upper_bound(rb->node, compare, arg, plower, pupper);
 }
@@ -127,9 +132,12 @@ bool rb_insert_unique(struct rb_node *node,
 void rb_insert_color(struct rb_node *node, struct rb_root *rb);
 
 void rb_erase(struct rb_node *node, struct rb_root *rb);
-void rb_erase_range(struct rb_node *beg, struct rb_node *end, struct rb_root *rb);
+void rb_erase_range(struct rb_node *beg,
+		    struct rb_node *end,
+		    struct rb_root *rb);
 void rb_erase_equal(struct rb_root *rb,
-		    int (*compare)(const struct rb_node *node, const void *arg),
+		    int (*compare)(const struct rb_node *node,
+				   const void *arg),
 		    void (*destroy)(struct rb_node *node, const void *arg),
 		    const void *arg_compare,
 		    const void *arg_destroy);
@@ -163,11 +171,17 @@ bool rb_clone_range(struct rb_root *rb,
 		    const struct rb_node *end,
 		    struct rb_node *(*node_clone)(const struct rb_node *node,
 						  const void *arg),
-		    void (*node_destroy)(struct rb_node *node, const void *arg),
+		    void (*node_destroy)(struct rb_node *node,
+					 const void *arg),
 		    const void *arg_clone,
 		    const void *arg_destroy);
 
-void rb_swap(struct rb_root *rb1, struct rb_root *rb2);
+static inline void rb_swap(struct rb_root *rb1, struct rb_root *rb2)
+{
+	struct rb_node *node = rb1->node;
+	rb1->node = rb2->node;
+	rb2->node = node;
+}
 
 #define rb_color(r)	((r)->color)
 #define rb_is_red(r)	(!rb_color(r))

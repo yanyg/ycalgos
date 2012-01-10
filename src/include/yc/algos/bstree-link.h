@@ -1,7 +1,7 @@
 /*
- * bstree-link.h: routines for all Binary Search Trees (rbtree, avltree, bstree, etc.)
+ * bstree-link.h -- Binary-Search-Trees Common Routines
  *
- * Copyright (C) 2011-2012 yanyg (cppgp@qq.com)
+ * Copyright (C) 2012-2013 yanyg (cppgp@qq.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +14,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 /*
  * DO Not include this file directly
  * AND DO Not use all routines in this file directly too
- * THE file is used to implement common routines of bstree, avltree, rbtree, etc.
+ * THE file is used to implement common routines of
+ *     bstree, avltree, rbtree, etc.
  */
 
 #ifndef __YCALGOS_BSTREE_LINK_H_
@@ -32,18 +33,7 @@
 
 #include <yc/compiler.h>
 
-/*
- * Binary-Search-Tree Implementation Rules
- *
- *   --> a head dummy node
- *   --> head's parent point to the root of the tree
- *   --> head's left point to the leftmost node of the tree
- *   --> head's right point to the rightmost node of the tree
- *   --> root's parent point to the head of the tree
- *   --> For empty tree, head.parent = NULL, head.left = head.right = &head.
- *   --> For non-empty tree, root.parent == &head and head.parent == &root, and
- *           head.left = <leftmost-tree>, head.right = <rightmost-tree>
- */
+__BEGIN_DECLS
 
 /* bstlink: Binary Search Tree Link  */
 #define bst_link_member(type)	\
@@ -56,7 +46,8 @@ struct bst_link
 typedef void (*bstlink_destroy_t)(struct bst_link *link, const void *arg);
 typedef int (*bstlink_compare_t)(const struct bst_link *link, const void *arg);
 typedef void (*bstlink_visit_t)(const struct bst_link *link, const void *arg);
-typedef bool (*bstlink_visit_cond_t)(const struct bst_link *link, const void *arg);
+typedef bool
+(*bstlink_visit_cond_t)(const struct bst_link *link, const void *arg);
 
 void bstlink_rotate_left(struct bst_link *link, struct bst_link **pproot);
 void bstlink_rotate_right(struct bst_link *link, struct bst_link **proot);
@@ -124,6 +115,11 @@ static inline size_t bstlink_depth(const struct bst_link *link, bool bmax)
 
 	return depth;
 }
+
+/*
+ * Type auto-convert macros
+ * Be careful! The below macros are dangerous !!!
+ */
 #define __bstlink_depth_max(link)			\
 		bstlink_depth				\
 		(					\
@@ -138,7 +134,6 @@ static inline size_t bstlink_depth(const struct bst_link *link, bool bmax)
 			false				\
 		)
 
-/* auto type convert macros */
 #define __bstlink_rotate_left(link, pproot)				\
 		bstlink_rotate_left					\
 		(							\
@@ -230,5 +225,7 @@ static inline size_t bstlink_depth(const struct bst_link *link, bool bmax)
 		(struct bst_link*)(link),				\
 		(bstlink_destroy_t)(destroy),				\
 		(const void*)(arg))
+
+__END_DECLS
 
 #endif	/* __YCALGOS_BSTREE_LINK_H_ */
